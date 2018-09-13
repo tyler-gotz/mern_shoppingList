@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const autoIncrement = require('mongoose-auto-increment');
+
+const db = require('../config/keys').mongoURI;
+
+var connection = mongoose.createConnection(db)
+
+autoIncrement.initialize(connection);
 
 const ItemSchema = new Schema({
   name: {
@@ -12,4 +19,9 @@ const ItemSchema = new Schema({
   }
 });
 
-module.exports = Item = mongoose.model('item', ItemSchema);
+ItemSchema.plugin(autoIncrement.plugin, {
+  model: 'item',
+  startAt: 1
+})
+
+module.exports = Item = connection.model('item', ItemSchema);
